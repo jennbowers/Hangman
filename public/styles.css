@@ -1,0 +1,11 @@
+*{
+  box-sizing: border-box;
+}
+
+.game_title {
+  float: left;
+}
+
+.counter {
+  float: right;
+}
