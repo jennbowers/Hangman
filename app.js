@@ -19,14 +19,14 @@ var loginData = [
 
 var context = {
   letters: ['']
-  , lettersId: function(letters) {
-    return lettersIdx++;
-  }
+  , displayErrors: []
   , completedLetters: []
 };
 
 
 const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
+
+
 
 
 // view engine
@@ -57,7 +57,6 @@ app.use(function(req, res, next) {
   if(!req.session.user &&  pathname != '/login') {
     res.redirect('/login');
   } else {
-    // res.redirect('/game');
     next();
   }
 });
@@ -74,7 +73,7 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/game', function(req, res) {
-  lettersIdx = 0;
+  // lettersIdx = 0;
   // generates random number to get random word
   var randomIndex = Math.floor(Math.random() * (words.length));
   var randomWord = words[randomIndex];
@@ -105,6 +104,25 @@ app.post('/login', function(req, res) {
     res.redirect('/login');
   }
 
+});
+
+app.post('/game', function(req, res) {
+  // checking to make sure that the input is only 1 letter
+  req.checkBody('user_input', 'You can only pick one letter at a time').isLength({min: 1, max: 100});
+  let errors = req.validationErrors();
+  if (errors) {
+    context['errors'] = errors;
+    }
+    context['user_input'] = req.body.user_input;
+
+    context.letters.forEach(function(letter){
+      // console.log(letter);
+      if (req.body.user_input == letter) {
+        
+      }
+    });
+
+    res.render('game', context);
 });
 
 

@@ -24,3 +24,8 @@
   margin: 20px;
   text-align: center;
 }
+
+.errors p {
+  list-style-type: none;
+  color: red;
+}

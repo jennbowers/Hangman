@@ -17,11 +17,21 @@
       <span class="letter {{.}}">___</span>
       {{/letters}}
     </div>
+    <div class="errors">
+        {{#errors}}
+        <p>{{msg}}</p>
+        {{/errors}}
+    </div>
     <div class="choose_letters_div">
       <form class="choose_letters" action="" method="post">
-        <input type="text" name="user_input" value="Pick a letter!">
-        <input type="submit" name="" value="">
+        <input type="text" name="user_input" placeholder="Pick a letter!" value="">
+        <input type="submit" name="" value="Guess!">
       </form>
+    </div>
+    <div class="guessed_letters">
+      <h4>Guessed Letters</h4>
+      <div class="letters_container">
+      </div>
     </div>
   </body>
 </html>
