@@ -18,9 +18,9 @@ var loginData = [
 ];
 
 var context = {
-  letters: []
-  // , lettersId: function(letters) {
-  //   return lettersIdx++;
+  letters: ['']
+  , lettersId: function(letters) {
+    return lettersIdx++;
   }
   , completedLetters: []
 };
@@ -95,7 +95,8 @@ app.get('/game', function(req, res) {
   var letters = randomWord.split("");
 
   // stores letters that are split into an array into the context wordLetters so we can assign an id to each
-  context.letters.push(letters);
+  context.letters = context.letters.concat(letters);
+  // context.letters.push(letters);
   console.log(context);
   res.render('game', context);
 });
