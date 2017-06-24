@@ -62,20 +62,6 @@ app.use(function(req, res, next) {
   }
 });
 
-// generates random number to get random word
-// app.use(function(req, res, next) {
-//   var randomIndex = Math.floor(Math.random() * (words.length));
-//   // console.log(randomIndex);
-//   var randomWord = words[randomIndex];
-//   // console.log(randomWord);
-//   var letters = randomWord.split('');
-//   // console.log(letters);
-//
-//   // stores letters that are split into an array into the context wordLetters so we can assign an id to each
-//   context.letters.push(letters);
-//   console.log(context);
-//   next();
-// });
 
 
 // requests--rendering all pages
@@ -96,7 +82,7 @@ app.get('/game', function(req, res) {
 
   // stores letters that are split into an array into the context wordLetters so we can assign an id to each
   context.letters = context.letters.concat(letters);
-  // context.letters.push(letters);
+  context.letters.shift();
   console.log(context);
   res.render('game', context);
 });
@@ -120,9 +106,6 @@ app.post('/login', function(req, res) {
   }
 
 });
-
-
-
 
 
 
