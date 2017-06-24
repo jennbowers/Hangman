@@ -8,8 +8,20 @@
   </head>
   <body>
     <!-- <h1>Me too!</h1> -->
-    <span class="game_title">Mystery Word</span>
-    <span class="counter">Counter will go here</span>
-    
+    <header>
+      <div class="game_title">Mystery Word</div>
+      <div class="counter">Counter will go here</div>
+    </header>
+    <div class="all_letters_div">
+      {{#letters}}
+      <span class="letter" id="{{id}}">___</span>
+      {{/letters}}
+    </div>
+    <div class="choose_letters_div">
+      <form class="choose_letters" action="" method="post">
+        <input type="text" name="user_input" value="Pick a letter!">
+        <input type="submit" name="" value="">
+      </form>
+    </div>
   </body>
 </html>

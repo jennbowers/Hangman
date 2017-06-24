@@ -2,10 +2,25 @@
   box-sizing: border-box;
 }
 
+/*game.mustache*/
+.header {
+  display: block;
+  height: 100px;
+}
+
 .game_title {
+  display: inline-block;
   float: left;
 }
 
 .counter {
+  display: inline-block;
   float: right;
+}
+
+.all_letters_div {
+  /*border: #000000 1px solid;*/
+  height: 50px;
+  margin: 20px;
+  text-align: center;
 }
