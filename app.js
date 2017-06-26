@@ -11,6 +11,7 @@ const app = express();
 
 // --------------------------database
 var lettersIdx = 0;
+var pathname = parseurl(req).pathname;
 
 
 var loginData = [
@@ -53,10 +54,19 @@ app.use(session({
 
 // redirects to login if not logged in
 app.use(function(req, res, next) {
-  var pathname = parseurl(req).pathname;
   if(!req.session.user &&  pathname != '/login') {
     res.redirect('/login');
   } else {
+    next();
+  }
+});
+
+app.use(function(req, res, next) {
+  var views = req.session.views;
+  if (!views) {
+    views = req.session.views = {};
+  } else {
+    views[pathname] = (views[pathname] || 0) + 1;
     next();
   }
 });
@@ -115,13 +125,16 @@ app.post('/game', function(req, res) {
     }
     context['user_input'] = req.body.user_input;
 
-    context.letters.forEach(function(letter){
-      // console.log(letter);
-      if (req.body.user_input == letter) {
-        context.guessedLetters.push(req.body.user_input);
-        console.log(context.guessedLetters);
-      }
-    });
+  context.letters.forEach(function(letter){
+    // console.log(letter);
+    if (req.body.user_input == letter) {
+      context.guessedLetters.push(req.body.user_input);
+      console.log(context.guessedLetters);
+    } else if (req.body.user_input != letter) {
+      context.guessedLetters.push(req.body.user_input);
+      console.log(context.guessedLetters);
+    }
+  });
 
     res.render('game', context);
 });

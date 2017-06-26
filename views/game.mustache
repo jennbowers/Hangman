@@ -14,7 +14,7 @@
     </header>
     <div class="all_letters_div">
       {{#letters}}
-      <span class="letter {{.}}">___</span>
+      <span class="letter {{.}}">___{{#letters == #guessedLetters}}{{.}}{{/letters}}</span>
       {{/letters}}
     </div>
     <div class="errors">
