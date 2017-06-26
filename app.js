@@ -10,7 +10,7 @@ const fs = require('file-system');
 const app = express();
 
 // --------------------------database
-var lettersIdx = 0;
+
 
 
 var loginData = [
@@ -22,7 +22,8 @@ var context = {
   , correctLetters: ['']
   , displayErrors: []
   , guessedLetters: []
-  , views: []
+  , guessesLeft: 8
+  , duplicateErrorMsg: ' '
 };
 
 
@@ -63,18 +64,18 @@ app.use(function(req, res, next) {
   }
 });
 
-app.use(function(req, res, next) {
-  var pathname = parseurl(req).pathname;
-  var views = req.session.views;
-  if (!views) {
-    views = req.session.views = {};
-  } else {
-    views[pathname] = (views[pathname] || 0) + 1;
-    context.views = views[pathname];
-    req.session.views = views[pathname];
-  }
-  next();
-});
+// app.use(function(req, res, next) {
+//   var pathname = parseurl(req).pathname;
+//   var views = req.session.views;
+//   if (!views) {
+//     views = req.session.views = {};
+//   } else {
+//     views[pathname] = (views[pathname] || 0) + 1;
+//     context.views = views[pathname];
+//     req.session.views = views[pathname];
+//   }
+//   next();
+// });
 
 
 
@@ -132,22 +133,34 @@ app.post('/game', function(req, res) {
     }
     context['user_input'] = req.body.user_input;
 
+  // makes counter tick if the guess is incorrect
+  if (!context.letters.includes(req.body.user_input)) {
+    context.guessesLeft--;
+    context.duplicateErrorMsg = ' ';
+  }
+  // makes counter not tick if guess is a duplicate
+  if (context.guessedLetters.includes(req.body.user_input)) {
+    context.guessesLeft++;
+    context.duplicateErrorMsg = 'You have already chosen this letter, chose again';
+  }
+
+  // pushes guessed letters into guessed letters array
+  if (!context.guessedLetters.includes(req.body.user_input)) {
+    context.guessedLetters.push(req.body.user_input);
+  }
+
+  // loops through each letter to replace correct letters with an empty string
   context.letters.forEach(function(letter, i){
     console.log(letter);
     console.log(req.body.user_input);
     if (req.body.user_input === letter) {
       var index = context.letters.indexOf(letter);
       context.letters.splice(index, 1, "");
-      // letter = "";
-      // console.log(context.guessedLetters);
-    } else if (req.body.user_input != letter) {
-      // have the counter tick
-    } else if (req.body.user_input === context.guessedLetters) {
-      // have counter not tick
+      context.duplicateErrorMsg = ' ';
     }
   });
-  context.guessedLetters.push(req.body.user_input);
   console.log(context);
+
 
     res.render('game', context);
 });

@@ -10,7 +10,7 @@
     <!-- <h1>Me too!</h1> -->
     <header>
       <div class="game_title">Mystery Word</div>
-      <div class="counter">You have made {{views}} {{^views}}0{{/views}}incorrect guesses</div>
+      <div class="counter">You have {{guessesLeft}} left</div>
     </header>
     <div class="all_letters_div">
       {{#letters}}
@@ -21,6 +21,9 @@
         {{#errors}}
         <p>{{msg}}</p>
         {{/errors}}
+        {{#duplicateErrorMsg}}
+        <p>{{.}}</p>
+        {{/duplicateErrorMsg}}
     </div>
     <div class="choose_letters_div">
       <form class="choose_letters" action="" method="post">
