@@ -20,7 +20,7 @@ var loginData = [
 var context = {
   letters: ['']
   , displayErrors: []
-  , completedLetters: []
+  , guessedLetters: []
 };
 
 
@@ -118,7 +118,8 @@ app.post('/game', function(req, res) {
     context.letters.forEach(function(letter){
       // console.log(letter);
       if (req.body.user_input == letter) {
-        
+        context.guessedLetters.push(req.body.user_input);
+        console.log(context.guessedLetters);
       }
     });
 
