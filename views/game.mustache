@@ -10,11 +10,11 @@
     <!-- <h1>Me too!</h1> -->
     <header>
       <div class="game_title">Mystery Word</div>
-      <div class="counter">Counter will go here</div>
+      <div class="counter">You have made {{views}} {{^views}}0{{/views}}incorrect guesses</div>
     </header>
     <div class="all_letters_div">
       {{#letters}}
-      <span class="letter {{.}}">___{{#letters == #guessedLetters}}{{.}}{{/letters}}</span>
+      <span class="letter {{.}}">{{#.}}__{{/.}}{{^.}}yay{{/.}}</span>
       {{/letters}}
     </div>
     <div class="errors">

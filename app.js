@@ -11,7 +11,6 @@ const app = express();
 
 // --------------------------database
 var lettersIdx = 0;
-var pathname = parseurl(req).pathname;
 
 
 var loginData = [
@@ -20,8 +19,10 @@ var loginData = [
 
 var context = {
   letters: ['']
+  , correctLetters: ['']
   , displayErrors: []
   , guessedLetters: []
+  , views: []
 };
 
 
@@ -54,6 +55,7 @@ app.use(session({
 
 // redirects to login if not logged in
 app.use(function(req, res, next) {
+  var pathname = parseurl(req).pathname;
   if(!req.session.user &&  pathname != '/login') {
     res.redirect('/login');
   } else {
@@ -62,13 +64,16 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(req, res, next) {
+  var pathname = parseurl(req).pathname;
   var views = req.session.views;
   if (!views) {
     views = req.session.views = {};
   } else {
     views[pathname] = (views[pathname] || 0) + 1;
-    next();
+    context.views = views[pathname];
+    req.session.views = views[pathname];
   }
+  next();
 });
 
 
@@ -92,6 +97,8 @@ app.get('/game', function(req, res) {
   // stores letters that are split into an array into the context wordLetters so we can assign an id to each
   context.letters = context.letters.concat(letters);
   context.letters.shift();
+  context.correctLetters = context.correctLetters.concat(letters);
+  context.correctLetters.shift();
   console.log(context);
   res.render('game', context);
 });
@@ -125,16 +132,22 @@ app.post('/game', function(req, res) {
     }
     context['user_input'] = req.body.user_input;
 
-  context.letters.forEach(function(letter){
-    // console.log(letter);
-    if (req.body.user_input == letter) {
-      context.guessedLetters.push(req.body.user_input);
-      console.log(context.guessedLetters);
+  context.letters.forEach(function(letter, i){
+    console.log(letter);
+    console.log(req.body.user_input);
+    if (req.body.user_input === letter) {
+      var index = context.letters.indexOf(letter);
+      context.letters.splice(index, 1, "");
+      // letter = "";
+      // console.log(context.guessedLetters);
     } else if (req.body.user_input != letter) {
-      context.guessedLetters.push(req.body.user_input);
-      console.log(context.guessedLetters);
+      // have the counter tick
+    } else if (req.body.user_input === context.guessedLetters) {
+      // have counter not tick
     }
   });
+  context.guessedLetters.push(req.body.user_input);
+  console.log(context);
 
     res.render('game', context);
 });
