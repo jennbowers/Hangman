@@ -9,14 +9,16 @@
   <body>
     <!-- <h1>Me too!</h1> -->
     <header>
-      <div class="game_title">Mystery Word</div>
-      <div class="counter">You have {{guessesLeft}} guesses left</div>
+      <h3 class="game_title">Mystery Word</h3>
+      <h3 class="counter">You have {{guessesLeft}} guesses left</h3>
     </header>
-    <div class="all_letters_div">
-      {{#letters}}
-      <span class="letter">{{.}}</span>
-      {{/letters}}
-    </div>
+    <section>
+      <div class="all_letters_div">
+        {{#letters}}
+        <span class="letter">{{.}}</span>
+        {{/letters}}
+      </div>
+    </section>
     <div class="errors">
         {{#errors}}
         <p>{{msg}}</p>

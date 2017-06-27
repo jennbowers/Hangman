@@ -3,19 +3,23 @@
 }
 
 /*game.mustache*/
-.header {
+header {
   display: block;
+  text-align: center;
   height: 100px;
 }
 
 .game_title {
-  display: inline-block;
-  float: left;
+  display: block;
 }
 
 .counter {
-  display: inline-block;
-  float: right;
+  display: block;
+}
+
+section {
+  display: block;
+  height: 100px;
 }
 
 .all_letters_div {
@@ -28,4 +32,23 @@
 .errors p {
   list-style-type: none;
   color: red;
+}
+
+.choose_letters_div {
+  text-align: center;
+}
+
+.guessed_letters {
+  text-align: center;
+}
+
+/*login.mustache*/
+.login_title {
+  text-align: center;
+  margin-top: 75px;
+  margin-bottom: 50px;
+}
+
+.login_form {
+  text-align: center;
 }

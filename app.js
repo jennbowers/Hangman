@@ -128,7 +128,7 @@ app.post('/game', function(req, res) {
   req.checkBody('user_input', 'You can only pick one letter at a time').isLength({min: 1, max: 1});
   let errors = req.validationErrors();
   if (errors) {
-    context['errors'] = errors;
+    context.errors = errors;
   } else {
     context.errors = ' ';
   }
