@@ -20,10 +20,12 @@ var loginData = [
 var context = {
   letters: ['']
   , correctLetters: ['']
-  , displayErrors: []
+  , displayErrors: ' '
+  , replaceLetter: []
   , guessedLetters: []
   , guessesLeft: 8
   , duplicateErrorMsg: ' '
+  , endingMsg: ''
 };
 
 
@@ -64,20 +66,6 @@ app.use(function(req, res, next) {
   }
 });
 
-// app.use(function(req, res, next) {
-//   var pathname = parseurl(req).pathname;
-//   var views = req.session.views;
-//   if (!views) {
-//     views = req.session.views = {};
-//   } else {
-//     views[pathname] = (views[pathname] || 0) + 1;
-//     context.views = views[pathname];
-//     req.session.views = views[pathname];
-//   }
-//   next();
-// });
-
-
 
 // requests--rendering all pages
 app.get('/', function(req, res) {
@@ -90,15 +78,25 @@ app.get('/login', function(req, res) {
 
 app.get('/game', function(req, res) {
   // lettersIdx = 0;
-  // generates random number to get random word
+  // // generates random number to get random word
+  context.letters = [''];
+  context.correctLetters = [''];
+  context.endingMsg = '';
+  context.guessedLetters = [];
   var randomIndex = Math.floor(Math.random() * (words.length));
   var randomWord = words[randomIndex];
   var letters = randomWord.split("");
+  var correctLetters = randomWord.split("");
+
+  // loops through all letters in letters array and replaces them with __
+  for (var i = 0; i < letters.length; i++) {
+    letters[i] = '__';
+  }
 
   // stores letters that are split into an array into the context wordLetters so we can assign an id to each
   context.letters = context.letters.concat(letters);
   context.letters.shift();
-  context.correctLetters = context.correctLetters.concat(letters);
+  context.correctLetters = context.correctLetters.concat(correctLetters);
   context.correctLetters.shift();
   console.log(context);
   res.render('game', context);
@@ -115,7 +113,7 @@ app.post('/login', function(req, res) {
   }
 
   if (req.session.user == user_name) {
-    console.log(req.session.user);
+    // console.log(req.session.user);
     res.redirect('/game');
   } else {
     console.log('fail');
@@ -130,41 +128,64 @@ app.post('/game', function(req, res) {
   let errors = req.validationErrors();
   if (errors) {
     context['errors'] = errors;
-    }
+  } else {
+    context.errors = ' ';
+  }
     context['user_input'] = req.body.user_input;
 
+
+  // loops through each letter to replace blank letters with correct letters
+  for (var i = 0; i < context.correctLetters.length; i++) {
+    if (req.body.user_input.toLowerCase() === context.correctLetters[i]) {
+      context.duplicateErrorMsg = ' ';
+      console.log(context.correctLetters[i]);
+      context.letters[i] = context.correctLetters[i];
+      req.session.word = context.letters;
+      console.log(context);
+    }
+  }
+
   // makes counter tick if the guess is incorrect
-  if (!context.letters.includes(req.body.user_input)) {
+  if (!context.correctLetters.includes(req.body.user_input.toLowerCase())) {
     context.guessesLeft--;
+    req.session.guessesLeft = context.guessesLeft;
     context.duplicateErrorMsg = ' ';
   }
+  context.duplicateErrorMsg = ' ';
+
   // makes counter not tick if guess is a duplicate
-  if (context.guessedLetters.includes(req.body.user_input)) {
+  if (context.guessedLetters.includes(req.body.user_input.toLowerCase()) && !context.correctLetters.includes(req.body.user_input.toLowerCase())) {
     context.guessesLeft++;
-    context.duplicateErrorMsg = 'You have already chosen this letter, chose again';
+    req.session.guessesLeft = context.guessesLeft;
+    context.duplicateErrorMsg = 'You have already chosen this letter, choose again';
+    console.log(context);
+  } else if (context.guessedLetters.includes(req.body.user_input.toLowerCase()) && context.correctLetters.includes(req.body.user_input.toLowerCase())) {
+    context.duplicateErrorMsg = 'You have already chosen this letter, choose again';
+    console.log(context);
   }
 
   // pushes guessed letters into guessed letters array
-  if (!context.guessedLetters.includes(req.body.user_input)) {
-    context.guessedLetters.push(req.body.user_input);
+  if (!context.guessedLetters.includes(req.body.user_input.toLowerCase())) {
+    context.guessedLetters.push(req.body.user_input.toLowerCase());
+    req.session.guessedLetters = context.guessedLetters;
   }
 
-  // loops through each letter to replace correct letters with an empty string
-  context.letters.forEach(function(letter, i){
-    console.log(letter);
-    console.log(req.body.user_input);
-    if (req.body.user_input === letter) {
-      var index = context.letters.indexOf(letter);
-      context.letters.splice(index, 1, "");
-      context.duplicateErrorMsg = ' ';
-    }
-  });
+  // if there are no __ left in context.letters than game is over and you win
+  if (!req.session.word.includes('__')) {
+    context.endingMsg = 'You Win! Good game, want to play again?';
+    req.session.endingMsg = context.endingMsg;
+    console.log(context.endingMsg);
+    console.log(req.session.word);
+  }
+
+  // if guesses < 1 the game is over and you lose
+  if (context.guessesLeft < 1) {
+    context.endingMsg = 'You lose. Want to play again?';
+    req.session.endingMsg = context.endingMsg;
+  }
   console.log(context);
-
-
     res.render('game', context);
 });
-
 
 
 

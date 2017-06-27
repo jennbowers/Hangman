@@ -10,11 +10,11 @@
     <!-- <h1>Me too!</h1> -->
     <header>
       <div class="game_title">Mystery Word</div>
-      <div class="counter">You have {{guessesLeft}} left</div>
+      <div class="counter">You have {{guessesLeft}} guesses left</div>
     </header>
     <div class="all_letters_div">
       {{#letters}}
-      <span class="letter {{.}}">{{#.}}__{{/.}}{{^.}}yay{{/.}}</span>
+      <span class="letter">{{.}}</span>
       {{/letters}}
     </div>
     <div class="errors">
@@ -29,6 +29,11 @@
       <form class="choose_letters" action="" method="post">
         <input type="text" name="user_input" placeholder="Pick a letter!" value="">
         <input type="submit" name="" value="Guess!">
+      </form>
+    </div>
+    <div class="ending_msgs">
+      <form class="play_again" action="" method="get">
+        {{#endingMsg}}{{.}} <input type="submit" name="play_again" value="Play Again">{{/endingMsg}}
       </form>
     </div>
     <div class="guessed_letters">
