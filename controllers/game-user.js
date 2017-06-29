@@ -106,7 +106,8 @@ module.exports = {
 
     // if guesses < 1 the game is over and you lose
     if (context.guessesLeft < 1) {
-      context.endingMsg = 'You lose. Want to play again?';
+      var finishedWord = context.correctLetters.join('');
+      context.endingMsg = 'You lose. Your word was: ' + finishedWord + '. Want to play again?';
       req.session.endingMsg = context.endingMsg;
     }
     console.log(context);
